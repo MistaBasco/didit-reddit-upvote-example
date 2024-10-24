@@ -65,42 +65,8 @@ export async function Vote({ postId, votes }) {
           downvote={downvote}
           votes={votes}
           existingVote={existingVote}
+          isLoggedIn={!!session?.user?.id}
         />
-        {/* <button formAction={upvote}>
-          {existingVote?.vote === 1 ? (
-            <TbArrowBigUpFilled
-              size={24}
-              className={clsx("hover:text-orange-600", {
-                "text-pink-300": existingVote?.vote === 1,
-              })}
-            />
-          ) : (
-            <TbArrowBigUp
-              size={24}
-              className={clsx("hover:text-orange-600", {
-                "text-pink-300": existingVote?.vote === 1,
-              })}
-            />
-          )}
-        </button>
-        <span className="w-6 text-center tabular-nums">{votes}</span>
-        <button formAction={downvote}>
-          {existingVote?.vote === -1 ? (
-            <TbArrowBigDownFilled
-              size={24}
-              className={clsx("hover:text-blue-600", {
-                "text-blue-300": existingVote?.vote === -1,
-              })}
-            />
-          ) : (
-            <TbArrowBigDown
-              size={24}
-              className={clsx("hover:text-blue-600", {
-                "text-blue-300": existingVote?.vote === -1,
-              })}
-            />
-          )}
-        </button> */}
       </form>
     </>
   );

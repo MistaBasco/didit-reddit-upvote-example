@@ -6,7 +6,7 @@ import { POSTS_PER_PAGE } from "@/config";
 
 export async function PostList({ currentPage = 1 }) {
   const { rows: posts } =
-    await db.query(`SELECT posts.id, posts.title, posts.body, posts.created_at, users.name, 
+    await db.query(`SELECT posts.id, posts.title, posts.body, posts.created_at, posts.user_id, users.name,
     COALESCE(SUM(votes.vote), 0) AS vote_total
      FROM posts
      JOIN users ON posts.user_id = users.id
@@ -15,6 +15,7 @@ export async function PostList({ currentPage = 1 }) {
      ORDER BY vote_total DESC
      LIMIT ${POSTS_PER_PAGE}
      OFFSET ${POSTS_PER_PAGE * (currentPage - 1)}`);
+  console.log(posts);
 
   return (
     <>
@@ -32,7 +33,9 @@ export async function PostList({ currentPage = 1 }) {
               >
                 {post.title}
               </Link>
-              <p className="text-zinc-700">posted by {post.name}</p>
+              <Link href={`user/${post.user_id}`}>
+                <p className="text-zinc-700">posted by {post.name}</p>
+              </Link>
             </div>
           </li>
         ))}

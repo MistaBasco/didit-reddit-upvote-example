@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import clsx from "clsx";
 import {
@@ -10,12 +10,46 @@ import {
 } from "react-icons/tb";
 import { FaSpinner } from "react-icons/fa";
 
-export function VoteButtons({ upvote, downvote, votes, existingVote }) {
-  const { pending, data, method, action } = useFormStatus();
+export function VoteButtons({
+  upvote,
+  downvote,
+  votes,
+  existingVote,
+  isLoggedIn,
+}) {
+  const { pending } = useFormStatus();
+  const [error, setError] = useState(null);
+
+  async function handleUpvote() {
+    if (!isLoggedIn) {
+      setError("You must be logged in to vote.");
+      return;
+    }
+    try {
+      await upvote();
+      setError(null); // Clear the error on successful vote
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleDownvote() {
+    if (!isLoggedIn) {
+      setError("You must be logged in to vote.");
+      return;
+    }
+    try {
+      await downvote();
+      setError(null); // Clear the error on successful vote
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
     <>
-      <button formAction={upvote}>
+      {error && <p className="text-red-500 mb-2">{error}</p>}
+      <button formAction={handleUpvote} disabled={pending}>
         {existingVote?.vote === 1 ? (
           <TbArrowBigUpFilled
             size={24}
@@ -41,7 +75,7 @@ export function VoteButtons({ upvote, downvote, votes, existingVote }) {
           votes
         )}
       </span>
-      <button formAction={downvote}>
+      <button formAction={handleDownvote} disabled={pending}>
         {existingVote?.vote === -1 ? (
           <TbArrowBigDownFilled
             size={24}
